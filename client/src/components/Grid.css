@@ -19,7 +19,7 @@
 }
 
 .visited {
-  background-color: #fff;
+  background-color: #1e1e1e;
 }
 
 .wall {
@@ -28,4 +28,8 @@
 
 .tempWalls {
   background-color: rgb(255, 238, 0);
+}
+
+.player {
+  background-color: #0f0;
 }
