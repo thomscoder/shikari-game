@@ -1,19 +1,19 @@
 .row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-right: -15px;
-    margin-left: -15px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
 }
 
 .cell {
-    background-color: #1e1e1e;
-    border: 1px solid #fff;
+  background-color: #1e1e1e;
+  border: 1px solid #fff;
 }
 
 .start {
-    background-color: #73e5ed;
+  background-color: #73e5ed;
 }
 
 .end {
-    background-color: #ff0000;
+  background-color: #ff0000;
 }
