@@ -8,7 +8,7 @@
     "commit": "cz",
     "dev": "cd client && pnpm dev",
     "postinstall": "cd client && pnpm install",
-    "format": "prettier --config ./.prettierrc.js --write --loglevel silent '**/*.{js,tsx,css}'",
+    "format": "prettier --config ./.prettierrc.js --write --loglevel silent '**/*.{js,ts,tsx,css}'",
     "prepare": "pnpm dlx husky-init && husky install",
     "lint": "pnpm format",
     "build": "cd client && npm run build"
@@ -19,7 +19,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,tsx,css}": "pnpm lint"
+    "*.{js,ts,tsx,css}": "pnpm lint"
   },
   "keywords": [],
   "author": "",

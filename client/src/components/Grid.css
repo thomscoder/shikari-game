@@ -1,8 +1,8 @@
+.grid {
+  border: #a00 solid 20px;
+}
 .row {
   display: flex;
-  flex-wrap: wrap;
-  margin-right: -15px;
-  margin-left: -15px;
 }
 
 .cell {
@@ -16,4 +16,16 @@
 
 .end {
   background-color: #ff0000;
+}
+
+.visited {
+  background-color: #fff;
+}
+
+.wall {
+  background-color: #a00;
+}
+
+.tempWalls {
+  background-color: rgb(255, 238, 0);
 }

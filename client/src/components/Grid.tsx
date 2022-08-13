@@ -14,7 +14,7 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
 
   useEffect(() => {
     const sGrid = new ShikariGrid(GRID_SIZE);
-    setGrid(sGrid.generateGrid());
+    setGrid(sGrid.generateMaze());
   }, []);
 
   return (
@@ -23,7 +23,6 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
         return (
           <div key={rowIndex} className="row">
             {row.map((cell, cellIndex) => {
-              console.log(cell);
               return (
                 <div
                   key={cellIndex}
@@ -32,9 +31,7 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
                     width: `${CELL_SIZE}px`,
                     height: `${CELL_SIZE}px`,
                   }}
-                >
-                  {cell}
-                </div>
+                ></div>
               );
             })}
           </div>
