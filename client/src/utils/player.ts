@@ -17,8 +17,8 @@ export default class Player {
   public movePlayer(i: number, j: number) {
     // Remove previous player
     if (this.playerLastPosition) {
-      const [x, y] = this.playerLastPosition;
-      this.grid[x][y] = 'visited';
+      const [py, px] = this.playerLastPosition;
+      this.grid[py][px] = 'visited';
     }
 
     this.grid[i][j] = 'player';

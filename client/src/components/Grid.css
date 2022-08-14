@@ -18,16 +18,14 @@
   background-color: #ff0000;
 }
 
-.visited {
+.visited,
+.tempVisited {
   background-color: #1e1e1e;
 }
 
-.wall {
+.wall,
+.tempWall {
   background-color: #a00;
-}
-
-.tempWalls {
-  background-color: rgb(255, 238, 0);
 }
 
 .player {
