@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
-import { INITIAL_POSITION, TEMP_WALLS_TIMER } from '../helpers/constants';
+import { CADENCE, INITIAL_POSITION, TEMP_WALLS_TIMER, TIMER, VICTORY_POINTS_BASELINE, WALL_GENERATION_SPEED } from '../helpers/constants';
 import { resetCell, toggleCell } from '../helpers/gridHelpers';
-import { GridProps, ShCell, ShCellPosition, ShGrid } from '../helpers/types';
+import { GridProps, ShCell, ShGrid } from '../helpers/types';
 import ShikariGrid from '../utils/grid';
 import Player from '../utils/player';
 
@@ -10,11 +10,17 @@ import './Grid.css';
 
 function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element {
   const sGrid = new ShikariGrid(GRID_SIZE);
+
   const [grid, setGrid] = useState<ShGrid>([]);
   const [playerPosition, setPlayerPosition] = useState<[number, number]>([...INITIAL_POSITION]);
   const [player, setPlayer] = useState<Player>(new Player(grid));
   const [lastMove, setLastMove] = useState<string>('');
   const [breakWallsCounter, setBreakWallsCounter] = useState<number>(0);
+  const [time, setTime] = useState<number>(TIMER);
+  const [playerWon, setPlayerWon] = useState<boolean>(false);
+
+  let timer: NodeJS.Timer;
+  let randomlyClosePassages: NodeJS.Timer;
 
   useEffect(() => {
     const _grid = sGrid.generatePerfect();
@@ -24,17 +30,36 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
     player.drawPlayer(i, j);
 
     // Create random temp walls with a cadence of TEMP_WALLS_TIMER
-    const randomlyClosePassages = setInterval(() => {
+    randomlyClosePassages = setInterval(() => {
       const [i, j] = [Math.floor(Math.random() * GRID_SIZE), Math.floor(Math.random() * GRID_SIZE)];
       shuffleWalls(_grid, i, j);
-    }, 200);
+    }, WALL_GENERATION_SPEED);
 
     setPlayer(player);
     setGrid(_grid);
+
+    // Start timer and decrease it of 1000ms each second
+    timer = setInterval(fn, CADENCE);
+
+    function fn() {
+      setTime((time) => {
+        if (time <= CADENCE) {
+          clearInterval(timer);
+          clearInterval(randomlyClosePassages);
+          return 0;
+        }
+        return time - CADENCE;
+      });
+    }
   }, []);
 
   useEffect(() => {
     if (grid.length) {
+      // If player arrives at the end of the grid, he wins
+      if (playerPosition[0] === GRID_SIZE - 1 && playerPosition[1] === GRID_SIZE - 1) {
+        setPlayerWon(true);
+      }
+
       const gr = player.movePlayer(playerPosition[0], playerPosition[1]);
       setGrid([...gr]);
     }
@@ -67,12 +92,14 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
     if (nextCell !== 'wall' && nextCell === 'tempWall' && shouldItBreakWalls) {
       grid[py + dy][px + dx] = 'visited';
       setPlayerPosition([py, px]);
-      console.log('wall');
       return;
     }
   };
 
   const keyEvaluator = (e: KeyboardEvent) => {
+    // if time's over stop the game
+    if (time < CADENCE || playerWon) return;
+
     e.stopImmediatePropagation();
     let nextCell;
     switch (e.key) {
@@ -145,6 +172,22 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
             </div>
           );
         })}
+      </div>
+      <div>
+        {time < CADENCE ? (
+          <div className="loosing-is-bad">
+            <p>You lost</p>
+            <button onClick={() => window.location.reload()}>RESTART</button>
+          </div>
+        ) : playerWon ? (
+          <div className="winning-is-cool">
+            <p>You won</p>
+            <p>Points: {Math.floor((breakWallsCounter && VICTORY_POINTS_BASELINE / breakWallsCounter) || VICTORY_POINTS_BASELINE + VICTORY_POINTS_BASELINE / 2)}</p>
+            <button onClick={() => window.location.reload()}>RESTART</button>
+          </div>
+        ) : (
+          <span>Remaining time: 00:{time / 1000}</span>
+        )}
       </div>
       <p>{breakWallsCounter > 5 ? <strong>No more wall breaking</strong> : <strong>Break walls: {breakWallsCounter}</strong>}</p>
     </Fragment>

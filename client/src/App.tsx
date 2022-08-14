@@ -11,6 +11,7 @@ function App() {
 
   return (
     <div className="App">
+      <h1>Shikari</h1>
       <Grid size={gridSize} cellSize={cellSize} />
     </div>
   );
