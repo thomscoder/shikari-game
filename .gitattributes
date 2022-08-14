@@ -1,3 +1,0 @@
-*.tsx linguist-language=Typescript
-*.sh linguist-detectable=false
-*.js linguist-detectable=Typescript
