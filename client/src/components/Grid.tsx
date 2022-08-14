@@ -97,10 +97,12 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
   };
 
   const keyEvaluator = (e: KeyboardEvent) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
     // if time's over stop the game
     if (time < CADENCE || playerWon) return;
 
-    e.stopImmediatePropagation();
     let nextCell;
     switch (e.key) {
       case 'ArrowUp':
