@@ -1,31 +1,33 @@
 import { useEffect, useState } from 'react';
-import { drawPlayer, resetCell, toggleCell } from '../helpers/gridHelpers';
-import ShikariGrid, { ShGrid } from '../utils/grid';
+import { INITIAL_POSITION, TEMP_WALLS_TIMER } from '../helpers/constants';
+import { resetCell, toggleCell } from '../helpers/gridHelpers';
+import { GridProps, ShGrid } from '../helpers/types';
+import ShikariGrid from '../utils/grid';
+import Player from '../utils/player';
 
 // css
 import './Grid.css';
 
-export type GridProps = {
-  size: number;
-  cellSize: number;
-};
-
-export const TEMP_WALLS_TIMER = 5000;
-
 function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element {
   const sGrid = new ShikariGrid(GRID_SIZE);
   const [grid, setGrid] = useState<ShGrid>([]);
-  const [playerPosition, setPlayerPosition] = useState([0, 0]);
+  const [playerPosition, setPlayerPosition] = useState([...INITIAL_POSITION]);
+  const [player, setPlayer] = useState<Player>(new Player(grid));
 
   useEffect(() => {
-    const _grid = sGrid.generateMaze();
-    drawPlayer(_grid, 0, 0);
+    const _grid = sGrid.generatePerfect();
+    const [i, j] = INITIAL_POSITION;
+
+    const player = new Player(_grid);
+    player.drawPlayer(i, j);
+
+    setPlayer(player);
     setGrid(_grid);
   }, []);
 
   useEffect(() => {
     if (grid.length) {
-      const gr = drawPlayer(grid, playerPosition[0], playerPosition[1]);
+      const gr = player.movePlayer(playerPosition[0], playerPosition[1]);
       setGrid([...gr]);
     }
   }, [playerPosition]);
