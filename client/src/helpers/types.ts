@@ -2,6 +2,7 @@
 export type GridProps = {
   size: number;
   cellSize: number;
+  mobile: boolean;
 };
 
 // Grid/Cell

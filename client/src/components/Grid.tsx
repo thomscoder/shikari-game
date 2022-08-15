@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
-import { CADENCE, INITIAL_POSITION, TEMP_WALLS_TIMER, TIMER, VICTORY_POINTS_BASELINE, WALL_GENERATION_SPEED } from '../helpers/constants';
+import { Joystick } from 'react-joystick-component';
+import { CADENCE, INITIAL_POSITION, TEMP_WALLS_TIMER, TIMER, WALL_GENERATION_SPEED } from '../helpers/constants';
 import { resetCell, toggleCell } from '../helpers/gridHelpers';
 import { GridProps, ShCell, ShGrid } from '../helpers/types';
 import ShikariGrid from '../utils/grid';
@@ -8,7 +9,7 @@ import Player from '../utils/player';
 // css
 import './Grid.css';
 
-function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element {
+function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE, mobile: IS_MOBILE }: GridProps): JSX.Element {
   const sGrid = new ShikariGrid(GRID_SIZE);
 
   const [grid, setGrid] = useState<ShGrid>([]);
@@ -96,32 +97,41 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
     }
   };
 
-  const keyEvaluator = (e: KeyboardEvent) => {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+  const keyEvaluator = (e: KeyboardEvent | string) => {
+    if (e && typeof e !== 'string') {
+      (e as KeyboardEvent).preventDefault();
+      (e as KeyboardEvent).stopImmediatePropagation();
+    }
+
+    const key = typeof e === 'string' ? e : e!.key;
 
     // if time's over stop the game
     if (time < CADENCE || playerWon) return;
 
     let nextCell;
-    switch (e.key) {
+    switch (key) {
       case 'ArrowUp':
+      case 'FORWARD':
         changePlayerPos(nextCell, [-1, 0]);
         setLastMove('up');
         break;
       case 'ArrowDown':
+      case 'BACKWARD':
         changePlayerPos(nextCell, [1, 0]);
         setLastMove('down');
         break;
       case 'ArrowLeft':
+      case 'LEFT':
         changePlayerPos(nextCell, [0, -1]);
         setLastMove('left');
         break;
       case 'ArrowRight':
+      case 'RIGHT':
         changePlayerPos(nextCell, [0, 1]);
         setLastMove('right');
         break;
       case ' ':
+      case 'BREAK':
         setBreakWallsCounter(breakWallsCounter + 1);
         if (breakWallsCounter > 5) break;
         // Break temp walls
@@ -153,7 +163,12 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
 
   return (
     <Fragment>
-      <div className="grid">
+      <div
+        className="grid"
+        style={{
+          border: `${CELL_SIZE}px solid #a00`,
+        }}
+      >
         {grid.map((row, rowIndex) => {
           return (
             <div key={rowIndex} className="row">
@@ -166,17 +181,20 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
                       width: `${CELL_SIZE}px`,
                       height: `${CELL_SIZE}px`,
                     }}
-                  >
-                    {cell === 'tempWall' && <strong>T</strong>}
-                  </div>
+                  ></div>
                 );
               })}
             </div>
           );
         })}
       </div>
+      {IS_MOBILE && !playerWon && time >= CADENCE && (
+        <div className="joystick" onClick={() => keyEvaluator('BREAK')}>
+          <Joystick baseColor={'#fff2'} stickColor={'#a00'} move={(e) => keyEvaluator(e.direction!)} />
+        </div>
+      )}
       <div>
-        {time < CADENCE ? (
+        {time < CADENCE && !playerWon ? (
           <div className="loosing-is-bad">
             <p>You lost</p>
             <button onClick={() => window.location.reload()}>RESTART</button>
@@ -184,7 +202,6 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE }: GridProps): JSX.Element 
         ) : playerWon ? (
           <div className="winning-is-cool">
             <p>You won</p>
-            <p>Points: {Math.floor((breakWallsCounter && VICTORY_POINTS_BASELINE / breakWallsCounter) || VICTORY_POINTS_BASELINE + VICTORY_POINTS_BASELINE / 2)}</p>
             <button onClick={() => window.location.reload()}>RESTART</button>
           </div>
         ) : (

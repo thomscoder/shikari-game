@@ -7,12 +7,14 @@ specifiers:
   '@vitejs/plugin-react': ^2.0.1
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-joystick-component: ^4.0.1
   typescript: ^4.6.4
   vite: ^3.0.7
 
 dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-joystick-component: 4.0.1_biqbaboplfbrettd7655fr4n2y
 
 devDependencies:
   '@types/node': 18.7.2
@@ -776,6 +778,16 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-joystick-component/4.0.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-efPaCNoDIiBNs0eUjsrE4Q+q4h5zXDqBs54vTMYSPv73useSl8VsJJeOburMHuxwsS4HoqqMu12Aav9SM7Usew==}
+    peerDependencies:
+      react: '>=17.0.2'
+      react-dom: '>=17.0.2'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react-refresh/0.14.0:

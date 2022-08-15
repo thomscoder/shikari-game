@@ -1,6 +1,3 @@
-.grid {
-  border: #a00 solid 20px;
-}
 .row {
   display: flex;
 }
@@ -18,17 +15,29 @@
   background-color: #ff0000;
 }
 
-.visited,
-.tempVisited {
+.visited {
   background-color: #1e1e1e;
 }
 
-.wall,
-.tempWall {
+.wall {
   background-color: #a00;
 }
 
 .player {
   background-color: rgb(157, 0, 255);
   border-radius: 50%;
+}
+
+.path {
+  background-color: #0f0;
+}
+
+.tempWall {
+  background-color: #a00;
+}
+
+.joystick {
+  display: flex;
+  justify-content: center;
+  margin: 4rem 0;
 }
