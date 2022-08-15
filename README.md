@@ -8,11 +8,11 @@ Either break them, wait until they disappear or succumb.
 
 ## Commands
 ### PC
-<strong>Arrow keys</strong> - to move
+<strong>Arrow keys</strong> - to move<br/>
 <strong>Spacebar</strong> -  to break the wall (to break a wall point in the direction of the wall and hit the spacebar)
 
 ### Mobile
-<strong>Joystick</strong> - to move
+<strong>Joystick</strong> - to move<br/>
 <strong>Click on joystick</strong> - to break the wall
 
 <img src="https://i.ibb.co/rZNVcJ2/Schermata-2022-08-15-alle-12-36-26.png/" alt="shikari-game">
