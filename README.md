@@ -9,7 +9,7 @@ Either break them, wait until they disappear or succumb.
 ## Commands
 ### PC
 <strong>Arrow keys</strong> - to move
-<strong>Space bar</strong> -  to break the wall (to break a wall point in the direction of the wall and hit the spacebar)
+<strong>Spacebar</strong> -  to break the wall (to break a wall point in the direction of the wall and hit the spacebar)
 
 ### Mobile
 <strong>Joystick</strong> - to move

@@ -12,6 +12,7 @@ import './Grid.css';
 function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE, mobile: IS_MOBILE }: GridProps): JSX.Element {
   const sGrid = new ShikariGrid(GRID_SIZE);
 
+  const [start, setStart] = useState<boolean>(false);
   const [grid, setGrid] = useState<ShGrid>([]);
   const [playerPosition, setPlayerPosition] = useState<[number, number]>([...INITIAL_POSITION]);
   const [player, setPlayer] = useState<Player>(new Player(grid));
@@ -38,21 +39,19 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE, mobile: IS_MOBILE }: GridP
 
     setPlayer(player);
     setGrid(_grid);
-
-    // Start timer and decrease it of 1000ms each second
-    timer = setInterval(fn, CADENCE);
-
-    function fn() {
-      setTime((time) => {
-        if (time <= CADENCE) {
-          clearInterval(timer);
-          clearInterval(randomlyClosePassages);
-          return 0;
-        }
-        return time - CADENCE;
-      });
-    }
   }, []);
+
+  function fn() {
+    setStart(true);
+    setTime((time) => {
+      if (time <= CADENCE) {
+        clearInterval(timer);
+        clearInterval(randomlyClosePassages);
+        return 0;
+      }
+      return time - CADENCE;
+    });
+  }
 
   useEffect(() => {
     if (grid.length) {
@@ -106,7 +105,7 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE, mobile: IS_MOBILE }: GridP
     const key = typeof e === 'string' ? e : e!.key;
 
     // if time's over stop the game
-    if (time < CADENCE || playerWon) return;
+    if (time < CADENCE || playerWon || !start) return;
 
     let nextCell;
     switch (key) {
@@ -132,8 +131,11 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE, mobile: IS_MOBILE }: GridP
         break;
       case ' ':
       case 'BREAK':
+        if (breakWallsCounter === 5) {
+          setTime(0);
+          break;
+        }
         setBreakWallsCounter(breakWallsCounter + 1);
-        if (breakWallsCounter > 5) break;
         // Break temp walls
         switch (lastMove) {
           case 'up':
@@ -204,11 +206,21 @@ function Grid({ size: GRID_SIZE, cellSize: CELL_SIZE, mobile: IS_MOBILE }: GridP
             <p>You won</p>
             <button onClick={() => window.location.reload()}>RESTART</button>
           </div>
+        ) : !start ? (
+          <button
+            className="start-btn"
+            onClick={() => {
+              // Start timer and decrease it of 1000ms each second
+              return (timer = setInterval(fn, CADENCE));
+            }}
+          >
+            Start
+          </button>
         ) : (
-          <span>Remaining time: 00:{time / 1000}</span>
+          <span>Remaining time: 00:{time / CADENCE}</span>
         )}
       </div>
-      <p>{breakWallsCounter > 5 ? <strong>No more wall breaking</strong> : <strong>Break walls: {breakWallsCounter}</strong>}</p>
+      <p>{breakWallsCounter < 6 && start && <strong>Break walls: {breakWallsCounter}</strong>}</p>
     </Fragment>
   );
 }
